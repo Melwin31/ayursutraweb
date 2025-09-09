@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><title>Doctor Dashboard</title><link rel="stylesheet" href="styles.css"></head>
+<body>
+  <div class="container">
+    <aside class="sidebar"><div class="brand"><div class="logo">AS</div><h3>AyurSutra</h3></div>
+      <nav class="side-nav"><a class="active" href="doctor-dashboard.html">Dashboard</a><a href="patient-dashboard.html">Patients</a><a href="sessions.html">Sessions</a><a href="protocols.html">Therapy Protocols</a><a href="notifications.html">Notifications</a><a href="analytics.html">Analytics</a><a href="settings.html">Settings</a></nav>
+      <div class="profile"><div class="mini">DA</div><div><div style="font-weight:800">Dr. Sharma</div><div style="font-size:13px;color:var(--muted)">Vaidya</div></div></div>
+    </aside>
+
+    <main class="main">
+      <div class="topbar"><div class="greeting"><h1>Good morning, Dr. Sharma</h1><p class="muted">Welcome to your Practitioner dashboard</p></div>
+        <div style="display:flex;gap:10px;align-items:center"><button class="btn-outline">🔔</button><div style="padding:6px 12px;border-radius:10px;background:var(--panel);box-shadow:var(--shadow);font-weight:700">Dr. Sharma ▾</div></div></div>
+
+      <div class="kpi-grid"><div class="kpi"><h4>Today's Sessions</h4><div class="num">8</div><div style="color:var(--muted);margin-top:8px;font-size:13px">+2 from yesterday</div></div><div class="kpi"><h4>Active Patients</h4><div class="num">24</div></div><div class="kpi"><h4>Upcoming</h4><div class="num">12</div></div><div class="kpi"><h4>Avg Progress</h4><div class="num">84%</div></div></div>
+
+      <section class="section"><h3>Today's Sessions</h3><p class="lead">Your scheduled therapy sessions for today</p><div class="session-list" id="sessionList"></div></section>
+
+      <div class="progress-overview"><h3 style="margin:0 0 8px 0">Patient Progress Overview</h3><p class="muted" style="margin:0 0 12px 0">Overall therapy progress for active patients</p>
+        <div class="progress-row"><div class="progress-label">Panchakarma Programs</div><div class="progress-value">75%</div></div><div class="progress-bar-wrap-wide"><div class="progress-inner" style="width:75%"></div></div>
+        <div style="height:12px"></div><div class="progress-row"><div class="progress-label">Abhyanga Therapy</div><div class="progress-value">90%</div></div><div class="progress-bar-wrap-wide"><div class="progress-inner" style="width:90%"></div></div></div>
+    </main>
+
+    <aside class="right">
+      <div class="quick-actions"><button onclick="alert('Start')">▶ Start Session</button><button class="secondary" style="background:#fff;border:1px solid #eee;color:var(--primary)">🗒 Add Note</button></div>
+      <div class="notifications"><h4 style="margin:0 0 8px 0">Notifications</h4><div class="notification-item">Pre-procedure reminder for Rahul Patel (Abhyanga)</div><div class="notification-item">Session completed: Priya Singh</div></div>
+    </aside>
+  </div>
+
+  <script>
+    const sessions=[{name:'Rahul Patel',therapy:'Abhyanga',time:'9:00 AM',status:'scheduled'},{name:'Priya Singh',therapy:'Shirodhara',time:'10:30 AM',status:'inprogress'},{name:'Amit Sharma',therapy:'Panchakarma',time:'2:00 PM',status:'scheduled'}];
+    function renderSessions(){const c=document.getElementById('sessionList');c.innerHTML='';sessions.forEach(s=>{const r=document.createElement('div');r.className='session-row';r.innerHTML=`<div class="session-left"><div class="status-dot"></div><div class="session-details"><strong>${s.name}</strong><span>${s.therapy}</span></div></div><div class="session-right"><div class="time">${s.time}</div><div class="pill ${s.status==='inprogress'?'inprogress':s.status==='completed'?'completed':'scheduled'}">${s.status}</div></div>`;c.appendChild(r)})}
+    renderSessions();
+  </script>
+</body>
+</html>

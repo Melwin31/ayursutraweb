@@ -1,0 +1,231 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Settings — AyurSutra (Prototype)</title>
+<style>
+  :root {
+    --bg: #F6F7F4;
+    --panel: #fff;
+    --muted: #8a8f86;
+    --primary: #2F7A5E;
+    --accent: #F5E9DA;
+    --shadow: 0 8px 22px rgba(18,20,24,0.06);
+    --font: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    margin:0;
+    font-family: var(--font);
+    background: linear-gradient(180deg, var(--bg), #fff);
+    color:#222;
+  }
+
+  .shell {
+    display:grid;
+    grid-template-columns:260px 1fr;
+    gap:22px;
+    padding:18px;
+    max-width:1400px;
+    margin:auto;
+  }
+
+  /* Sidebar */
+  .sidebar {
+    background:var(--panel);
+    border-radius:14px;
+    padding:22px;
+    box-shadow:var(--shadow);
+    display:flex;
+    flex-direction:column;
+    gap:18px;
+    height:calc(100vh - 36px);
+    position:sticky;
+    top:18px;
+  }
+  .brand { display:flex;align-items:center;gap:12px }
+  .logo {
+    width:46px;height:46px;border-radius:10px;
+    background:linear-gradient(135deg,var(--primary),#4aa77a);
+    display:flex;align-items:center;justify-content:center;
+    color:#fff;font-weight:700;font-size:18px;
+  }
+  .sidebar nav { display:flex;flex-direction:column;gap:8px }
+  .sidebar nav a {
+    padding:12px;border-radius:10px;text-decoration:none;
+    color:#2f3a34;font-weight:600;
+  }
+  .sidebar nav a.active { background:var(--accent); }
+  .profile { margin-top:auto;display:flex;gap:10px;align-items:center;color:var(--muted);font-size:13px }
+  .profile .mini { width:40px;height:40px;border-radius:10px;background:var(--accent);display:flex;align-items:center;justify-content:center;color:var(--primary);font-weight:700 }
+
+  /* Main */
+  main { padding:12px; }
+  .topbar { margin-bottom:16px; }
+  .topbar h1 { margin:0;font-size:20px;font-weight:800; }
+  .topbar p { margin:4px 0 0;color:var(--muted); }
+
+  /* Tabs */
+  .tabs {
+    display:flex;
+    background:#f7f5f2;
+    border-radius:20px;
+    border:1px solid #eee;
+    margin:18px 0;
+    overflow:hidden;
+    max-width:600px;
+  }
+  .tab {
+    flex:1;
+    text-align:center;
+    padding:12px 16px;
+    font-weight:600;
+    color:var(--muted);
+  }
+  .tab.active {
+    background:var(--accent);
+    color:var(--primary);
+  }
+
+  /* Roles grid */
+  .roles {
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(280px,1fr));
+    gap:18px;
+  }
+  .role-card {
+    background:var(--panel);
+    border-radius:14px;
+    padding:18px;
+    box-shadow:var(--shadow);
+  }
+  .role-card h3 { margin:0 0 6px 0; font-size:16px; }
+  .role-card p { margin:0 0 12px 0; color:var(--muted); font-size:14px; }
+  .perm-tags { display:flex; flex-wrap:wrap; gap:6px; margin-bottom:12px; }
+  .tag {
+    background:#f2f1ef;
+    padding:6px 10px;
+    border-radius:6px;
+    font-size:13px;
+    color:#555;
+  }
+  .actions { display:flex;justify-content:space-between;align-items:center }
+  .btn {
+    padding:6px 12px;
+    border-radius:8px;
+    font-size:13px;
+    border:1px solid #ddd;
+    background:#fff;
+    cursor:pointer;
+  }
+  .btn.edit { font-weight:600; }
+  .btn.delete { color:#a33; }
+  .add-btn {
+    background:var(--primary);
+    color:#fff;
+    border:none;
+    padding:10px 18px;
+    border-radius:8px;
+    font-weight:600;
+    cursor:pointer;
+    float:right;
+    margin-bottom:20px;
+  }
+</style>
+</head>
+<body>
+  <div class="shell">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="logo">AS</div>
+        <div>
+          <h3>AyurSutra</h3>
+          <div style="font-size:13px;color:var(--muted)">Panchakarma Clinic</div>
+        </div>
+      </div>
+      <nav>
+        <a href="doctor-dashboard.html">Dashboard</a>
+        <a href="patient-dashboard.html">Patients</a>
+        <a href="sessions.html">Sessions</a>
+        <a href="protocols.html">Therapy Protocols</a>
+        <a href="notifications.html">Notifications</a>
+        <a href="analytics.html">Analytics</a>
+        <a class="active" href="settings.html">Settings</a>
+      </nav>
+      <div class="profile">
+        <div class="mini">DA</div>
+        <div>
+          <div style="font-weight:800">Dr. Sharma</div>
+          <div>Vaidya</div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main -->
+    <main>
+      <div class="topbar">
+        <h1>Settings</h1>
+        <p>Manage system configuration and preferences</p>
+      </div>
+
+      <!-- Tabs -->
+      <div class="tabs">
+        <div class="tab active">Roles & Permissions</div>
+        <div class="tab">Therapy Protocols</div>
+        <div class="tab">Notifications</div>
+        <div class="tab">Clinic Details</div>
+      </div>
+
+      <button class="add-btn">+ Add Role</button>
+
+      <!-- Roles -->
+      <div class="roles">
+        <div class="role-card">
+          <h3>Admin</h3>
+          <p>Full system access and management</p>
+          <div class="perm-tags">
+            <div class="tag">manage users</div>
+            <div class="tag">manage settings</div>
+            <div class="tag">view analytics</div>
+            <div class="tag">manage protocols</div>
+          </div>
+          <div class="actions">
+            <button class="btn edit">✏️ Edit</button>
+            <button class="btn delete">🗑 Delete</button>
+          </div>
+        </div>
+
+        <div class="role-card">
+          <h3>Practitioner</h3>
+          <p>Patient management and therapy sessions</p>
+          <div class="perm-tags">
+            <div class="tag">manage patients</div>
+            <div class="tag">conduct sessions</div>
+            <div class="tag">view analytics</div>
+          </div>
+          <div class="actions">
+            <button class="btn edit">✏️ Edit</button>
+            <button class="btn delete">🗑 Delete</button>
+          </div>
+        </div>
+
+        <div class="role-card">
+          <h3>Reception</h3>
+          <p>Scheduling and basic patient management</p>
+          <div class="perm-tags">
+            <div class="tag">schedule sessions</div>
+            <div class="tag">basic patient info</div>
+          </div>
+          <div class="actions">
+            <button class="btn edit">✏️ Edit</button>
+            <button class="btn delete">🗑 Delete</button>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+</body>
+</html>

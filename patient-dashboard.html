@@ -1,0 +1,436 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Patient Management — AyurSutra (Prototype)</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <style>
+    :root{
+      --bg:#F6F7F4;
+      --panel:#fff;
+      --muted:#8a8f86;
+      --primary:#2F7A5E;
+      --accent:#F5E9DA;
+      --shadow: 0 8px 22px rgba(18,20,24,0.06);
+      --card-radius:14px;
+      --maxw:1400px;
+      --font: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family:var(--font);
+      background:linear-gradient(180deg,var(--bg),#fff);
+      color:#222;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+    }
+
+    /* page layout */
+    .container{
+      max-width:var(--maxw);
+      margin:18px auto;
+      display:grid;
+      grid-template-columns:260px 1fr 320px;
+      gap:18px;
+      padding:12px;
+      align-items:start;
+    }
+
+    /* SIDEBAR */
+    .sidebar{
+      background:var(--panel);
+      border-radius:var(--card-radius);
+      padding:20px;
+      height:calc(100vh - 36px);
+      position:sticky;
+      top:18px;
+      box-shadow:var(--shadow);
+      display:flex;
+      flex-direction:column;
+      gap:18px;
+    }
+    .brand{display:flex;align-items:center;gap:12px}
+    .logo{
+      width:46px;height:46px;border-radius:10px;
+      background:linear-gradient(135deg,var(--primary),#4aa77a);
+      display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:18px;
+    }
+    .brand h3{margin:0;color:var(--primary);font-size:18px}
+    .side-nav{display:flex;flex-direction:column;gap:6px;margin-top:8px}
+    .side-nav a{
+      display:flex;align-items:center;gap:10px;padding:12px;border-radius:10px;color:#2f3a34;text-decoration:none;font-weight:700;
+    }
+    .side-nav a svg{opacity:0.9}
+    .side-nav a.active{ background:var(--accent) }
+
+    .sidebar .profile{ margin-top:auto; font-size:13px; color:var(--muted) }
+    .mini{ width:40px;height:40px;border-radius:10px;background:var(--accent);display:flex;align-items:center;justify-content:center;color:var(--primary);font-weight:800 }
+
+    /* MAIN */
+    main{min-height:calc(100vh - 36px); padding:6px 0}
+    .topbar{ display:flex; justify-content:space-between; align-items:center; gap:12px; margin-bottom:6px }
+    .greeting h1{ margin:0; font-size:20px; font-weight:800 }
+    .greeting p{ margin:4px 0 0 0; color:var(--muted) }
+
+    /* header row & action */
+    .header-row{ display:flex; justify-content:space-between; align-items:flex-start; gap:12px; margin-bottom:18px }
+    .hdr-left{ display:flex; flex-direction:column; gap:8px }
+    .page-title{ font-size:26px; margin:0; font-weight:800; color:#2b3a32 }
+    .page-sub{ margin:0; color:var(--muted); }
+
+    /* tabs under heading */
+    .tabs {
+      display:flex;
+      gap:10px;
+      align-items:center;
+      margin-top:8px;
+    }
+    .tab {
+      padding:10px 16px;
+      border-radius:999px;
+      background:linear-gradient(180deg,#fff,#fff);
+      border:1px solid rgba(0,0,0,0.03);
+      font-weight:700;
+      color:#2b3a32;
+    }
+    .tab:first-child{ box-shadow: 0 1px 0 rgba(0,0,0,0.02) inset }
+    .tab.active{ background:#fff; box-shadow: 0 6px 16px rgba(18,20,24,0.04) }
+
+    .hdr-actions { display:flex; gap:12px; align-items:center; }
+
+    .add-patient {
+      background:var(--primary);
+      color:#fff;
+      padding:10px 14px;
+      border-radius:10px;
+      border:0;
+      font-weight:700;
+      display:inline-flex;
+      gap:8px;
+      align-items:center;
+    }
+
+    .search-filters {
+      display:flex;
+      align-items:center;
+      gap:12px;
+      margin-top:10px;
+    }
+
+    .search-row{ display:flex; gap:12px; align-items:center }
+    .search-row input{
+      width:740px;
+      padding:12px 14px;
+      border-radius:10px;
+      border:1px solid #eee;
+      font-size:14px;
+      outline:none;
+      background:#fff;
+    }
+    .btn-outline{
+      padding:10px 12px;border-radius:10px;border:1px solid #eee;background:#fff;font-weight:700;cursor:default;
+    }
+
+    /* patient cards grid */
+    .cards-grid{
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:18px;
+      margin-top:12px;
+    }
+    .patient-card{
+      background:var(--panel);
+      border-radius:14px;
+      padding:22px;
+      box-shadow:var(--shadow);
+      border:1px solid rgba(0,0,0,0.03);
+      display:flex;flex-direction:column;gap:12px;
+      min-height:360px;
+    }
+
+    .patient-top{ display:flex; justify-content:space-between; align-items:center; gap:10px }
+    .patient-left{ display:flex; gap:12px; align-items:center }
+    .avatar-circle{ width:48px;height:48px;border-radius:999px;background:var(--primary);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800 }
+    .patient-meta strong{ font-size:16px; display:block }
+    .patient-meta .sub{ color:var(--muted); font-size:13px; margin-top:6px }
+
+    .tag{ padding:6px 10px;border-radius:999px;background:#eaf9f0;color: #2f7a5e;font-weight:700;font-size:12px }
+
+    .patient-body{ display:grid; grid-template-columns:1fr 1fr; gap:12px; color:var(--muted); font-size:14px }
+    .patient-body .label{ color:var(--muted); font-weight:700; margin-bottom:6px; font-size:13px }
+
+    .progress-row{ grid-column:1 / -1 }
+    .progress-row .value{ float:right; font-weight:700; color:#2b3a32 }
+    .progress-bar-wrap{ background:#f0f0f0; border-radius:999px; height:10px; overflow:hidden; margin-top:8px }
+    .progress-inner{ height:100%; background: linear-gradient(90deg,var(--primary), #4aa77a); }
+
+    .card-actions{ display:flex; flex-direction:column; gap:10px; margin-top:auto }
+    .btn-solid{ background:var(--primary); color:#fff; padding:10px; border-radius:10px; border:0; font-weight:700; cursor:default }
+
+    /* RIGHT COLUMN */
+    .right{ background:transparent; position:sticky; top:18px; align-self:start; padding-top:14px }
+    .quick-actions{ display:flex; flex-direction:column; gap:10px; margin-bottom:16px }
+    .notification-item{ background:#fff; padding:12px; border-radius:10px; border:1px solid #f1efe9; margin-bottom:10px; color:var(--muted) }
+
+    /* small utilities to match screenshot spacing */
+    .spacer { height:6px }
+
+    /* responsive */
+    @media (max-width:1300px){
+      .search-row input{ width:520px; }
+    }
+    @media (max-width:1200px){
+      .container{ grid-template-columns:220px 1fr; }
+      .search-row input{ width:360px; }
+      .cards-grid{ grid-template-columns:repeat(2,1fr) }
+    }
+    @media (max-width:760px){
+      .container{ grid-template-columns:1fr; padding:10px }
+      .sidebar{ display:none }
+      .search-row input{ width:100% }
+      .cards-grid{ grid-template-columns:1fr }
+      .right{ display:none }
+    }
+
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- LEFT SIDEBAR -->
+    <aside class="sidebar" aria-label="Main sidebar">
+      <div class="brand">
+        <div class="logo">AS</div>
+        <div>
+          <h3>AyurSutra</h3>
+          <div style="font-size:13px;color:var(--muted)">Panchakarma Clinic</div>
+        </div>
+      </div>
+
+      <nav class="side-nav" aria-label="Primary">
+        <!-- unchanged anchor hrefs as requested -->
+        <a href="doctor-dashboard.html">Dashboard</a>
+        <a class="active" href="patient-dashboard.html">Patients</a>
+        <a href="sessions.html">Sessions</a>
+        <a href="protocols.html">Therapy Protocols</a>
+        <a href="notifications.html">Notifications</a>
+        <a href="analytics.html">Analytics</a>
+        <a href="settings.html">Settings</a>
+      </nav>
+
+      <div class="profile">
+        <div class="mini">DA</div>
+        <div>
+          <div style="font-weight:800">Dr. Sharma</div>
+          <div style="font-size:13px;color:var(--muted)">Vaidya</div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main role="main">
+      <div class="header-row">
+        <div class="hdr-left">
+          <div style="display:flex;align-items:flex-start;gap:18px">
+            <div>
+              <div class="page-title">Patient Management</div>
+              <div class="page-sub">Manage patient records, prescriptions, and exercise monitoring</div>
+            </div>
+          </div>
+
+          <div class="tabs" aria-hidden>
+            <div class="tab active">Patient List</div>
+            <div class="tab">Patient Details</div>
+            <div class="tab">Prescriptions</div>
+            <div class="tab">Exercise Monitoring</div>
+            <div class="tab">Progress Tracking</div>
+          </div>
+
+          <div class="search-filters">
+            <div class="search-row" role="search">
+              <input type="text" placeholder="Search patients by name or ID..." aria-label="Search patients">
+            </div>
+          </div>
+        </div>
+
+        <div class="hdr-actions">
+          <div>
+            <button class="btn-outline" style="display:inline-flex;align-items:center;gap:8px">Filters</button>
+          </div>
+          <div>
+            <button class="add-patient">＋ Add Patient</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- CARDS GRID: static cards for prototype -->
+      <div class="cards-grid">
+        <!-- Card 1 -->
+        <article class="patient-card" aria-label="Rahul Patel">
+          <div class="patient-top">
+            <div class="patient-left">
+              <div class="avatar-circle">RP</div>
+              <div class="patient-meta">
+                <strong>Rahul Patel</strong>
+                <div class="sub">PT001</div>
+              </div>
+            </div>
+            <div><span class="tag">Active</span></div>
+          </div>
+
+          <div class="patient-body">
+            <div>
+              <div class="label">Age</div>
+              <div>34</div>
+            </div>
+            <div>
+              <div class="label">Gender</div>
+              <div>Male</div>
+            </div>
+
+            <div class="progress-row">
+              <div style="display:flex;justify-content:space-between;align-items:center">
+                <div class="label">Therapy Progress</div>
+                <div class="value">65%</div>
+              </div>
+              <div class="progress-bar-wrap" aria-hidden>
+                <div class="progress-inner" style="width:65%"></div>
+              </div>
+            </div>
+
+            <div>
+              <div class="label">Current Therapy</div>
+              <div style="font-weight:700;color:#222">Panchakarma Program</div>
+            </div>
+
+            <div>
+              <div class="label">Next Session</div>
+              <div>1/15/2024</div>
+            </div>
+          </div>
+
+          <div class="card-actions">
+            <button class="btn-outline">👁️ View Details</button>
+            <button class="btn-solid">↗ Progress Chart</button>
+          </div>
+        </article>
+
+        <!-- Card 2 -->
+        <article class="patient-card" aria-label="Priya Singh">
+          <div class="patient-top">
+            <div class="patient-left">
+              <div class="avatar-circle">PS</div>
+              <div class="patient-meta">
+                <strong>Priya Singh</strong>
+                <div class="sub">PT002</div>
+              </div>
+            </div>
+            <div><span class="tag">Active</span></div>
+          </div>
+
+          <div class="patient-body">
+            <div>
+              <div class="label">Age</div>
+              <div>28</div>
+            </div>
+            <div>
+              <div class="label">Gender</div>
+              <div>Female</div>
+            </div>
+
+            <div class="progress-row">
+              <div style="display:flex;justify-content:space-between;align-items:center">
+                <div class="label">Therapy Progress</div>
+                <div class="value">80%</div>
+              </div>
+              <div class="progress-bar-wrap" aria-hidden>
+                <div class="progress-inner" style="width:80%"></div>
+              </div>
+            </div>
+
+            <div>
+              <div class="label">Current Therapy</div>
+              <div style="font-weight:700;color:#222">Shirodhara</div>
+            </div>
+
+            <div>
+              <div class="label">Next Session</div>
+              <div>1/16/2024</div>
+            </div>
+          </div>
+
+          <div class="card-actions">
+            <button class="btn-outline">👁️ View Details</button>
+            <button class="btn-solid">↗ Progress Chart</button>
+          </div>
+        </article>
+
+        <!-- Card 3 -->
+        <article class="patient-card" aria-label="Amit Sharma">
+          <div class="patient-top">
+            <div class="patient-left">
+              <div class="avatar-circle">AS</div>
+              <div class="patient-meta">
+                <strong>Amit Sharma</strong>
+                <div class="sub">PT003</div>
+              </div>
+            </div>
+            <div><span class="tag" style="background:#eef3ff;color:#3c6fb0">Completed</span></div>
+          </div>
+
+          <div class="patient-body">
+            <div>
+              <div class="label">Age</div>
+              <div>45</div>
+            </div>
+            <div>
+              <div class="label">Gender</div>
+              <div>Male</div>
+            </div>
+
+            <div class="progress-row">
+              <div style="display:flex;justify-content:space-between;align-items:center">
+                <div class="label">Therapy Progress</div>
+                <div class="value">100%</div>
+              </div>
+              <div class="progress-bar-wrap" aria-hidden>
+                <div class="progress-inner" style="width:100%"></div>
+              </div>
+            </div>
+
+            <div>
+              <div class="label">Current Therapy</div>
+              <div style="font-weight:700;color:#222">Abhyanga</div>
+            </div>
+
+            <div>
+              <div class="label">Next Session</div>
+              <div>-</div>
+            </div>
+          </div>
+
+          <div class="card-actions">
+            <button class="btn-outline">👁️ View Details</button>
+            <button class="btn-solid">↗ Progress Chart</button>
+          </div>
+        </article>
+
+      </div>
+    </main>
+
+    <!-- RIGHT PANEL -->
+    <aside class="right" aria-label="Right column">
+      <div class="quick-actions">
+        <button class="btn-solid" style="width:100%;margin-bottom:8px">Export Patients</button>
+        <button class="btn-outline" style="width:100%">Bulk Actions</button>
+      </div>
+
+      <div class="notifications">
+        <h4 style="margin:0 0 8px 0">Notifications</h4>
+        <div class="notification-item">New registration: Krishna Iyer <div style="font-size:12px;color:var(--muted);margin-top:6px">2 hours ago</div></div>
+        <div class="notification-item">Meera marked arrived • Sep 10 <div style="font-size:12px;color:var(--muted);margin-top:6px">30 min ago</div></div>
+      </div>
+    </aside>
+  </div>
+</body>
+</html>

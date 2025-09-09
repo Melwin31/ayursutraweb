@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Therapy Protocols — AyurSutra</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    .page-header { display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:18px; }
+    .search-row { display:flex;gap:12px;align-items:center; }
+    .search-row input { width:420px;padding:10px;border-radius:10px;border:1px solid #eee; }
+    .btn-add { background:var(--primary);color:#fff;padding:10px 14px;border-radius:10px;border:0;font-weight:700; }
+
+    .protocols-grid { display:grid;grid-template-columns:repeat(3,1fr);gap:18px; }
+    .protocol-card {
+      background:#fff;
+      border-radius:14px;
+      padding:18px;
+      box-shadow:var(--shadow);
+      border:1px solid rgba(0,0,0,0.05);
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+    }
+    .protocol-title { font-size:18px;font-weight:800;color:#233229; }
+    .protocol-meta { font-size:14px;color:var(--muted); }
+    .status { padding:6px 10px;border-radius:999px;font-size:12px;font-weight:700; }
+    .status.active { background:#eaf9f0;color:#2f7a5e; }
+    .status.draft { background:#fff3e6;color:#a76d00; }
+    .card-actions { display:flex;gap:10px;margin-top:auto; }
+    .btn-outline { background:#fff;border:1px solid #eee;padding:8px 12px;border-radius:10px;font-weight:700; }
+    .btn-solid { background:var(--primary);color:#fff;padding:8px 12px;border-radius:10px;border:0;font-weight:700; }
+
+    @media (max-width:1000px){ .protocols-grid { grid-template-columns:repeat(2,1fr); } }
+    @media (max-width:700px){ .protocols-grid { grid-template-columns:1fr; } .search-row input { width:100%; } }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="brand"><div class="logo">AS</div><div><h3>AyurSutra</h3><div style="font-size:13px;color:var(--muted)">Panchakarma Clinic</div></div></div>
+      <nav class="side-nav">
+        <a href="doctor-dashboard.html">Dashboard</a>
+        <a href="patient-dashboard.html">Patients</a>
+        <a href="sessions.html">Sessions</a>
+        <a class="active" href="protocols.html">Therapy Protocols</a>
+        <a href="notifications.html">Notifications</a>
+        <a href="analytics.html">Analytics</a>
+        <a href="settings.html">Settings</a>
+      </nav>
+      <div class="profile"><div class="mini">DA</div><div><div style="font-weight:800">Dr. Sharma</div><div style="font-size:13px;color:var(--muted)">Vaidya</div></div></div>
+    </aside>
+
+    <!-- Main -->
+    <main class="main">
+      <div class="topbar">
+        <div class="greeting">
+          <h1>Good morning, Dr. Sharma</h1>
+          <p class="muted">Welcome to your Practitioner dashboard</p>
+        </div>
+        <div style="padding:6px 12px;border-radius:10px;background:var(--panel);font-weight:700">Dr. Sharma ▾</div>
+      </div>
+
+      <div class="page-header">
+        <div class="search-row">
+          <input type="text" placeholder="Search protocols...">
+          <button class="btn-outline">Filters</button>
+        </div>
+        <button class="btn-add">+ Add Protocol</button>
+      </div>
+
+      <div class="protocols-grid">
+        <div class="protocol-card">
+          <div class="protocol-title">Abhyanga Therapy</div>
+          <div class="protocol-meta">Duration: 45 min | Full body oil massage</div>
+          <div class="protocol-meta">Promotes relaxation, improves circulation and detoxification.</div>
+          <span class="status active">Active</span>
+          <div class="card-actions">
+            <button class="btn-outline">View</button>
+            <button class="btn-solid">Edit</button>
+          </div>
+        </div>
+
+        <div class="protocol-card">
+          <div class="protocol-title">Shirodhara</div>
+          <div class="protocol-meta">Duration: 60 min | Continuous oil pouring on forehead</div>
+          <div class="protocol-meta">Helps with insomnia, anxiety, and nervous system balance.</div>
+          <span class="status active">Active</span>
+          <div class="card-actions">
+            <button class="btn-outline">View</button>
+            <button class="btn-solid">Edit</button>
+          </div>
+        </div>
+
+        <div class="protocol-card">
+          <div class="protocol-title">Nasya</div>
+          <div class="protocol-meta">Duration: 30 min | Herbal oils through nostrils</div>
+          <div class="protocol-meta">Effective for sinus, migraine, and respiratory issues.</div>
+          <span class="status draft">Draft</span>
+          <div class="card-actions">
+            <button class="btn-outline">View</button>
+            <button class="btn-solid">Edit</button>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- Right Column -->
+    <aside class="right">
+      <div class="quick-actions">
+        <button class="btn-solid">Export Protocols</button>
+      </div>
+      <div class="notifications">
+        <h4 style="margin:0 0 8px 0">Tips</h4>
+        <div style="color:var(--muted)">Regularly update therapy details to keep patient treatments aligned with best practices.</div>
+      </div>
+    </aside>
+  </div>
+</body>
+</html>

@@ -1,0 +1,353 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Admin Dashboard - AyurSutra (Prototype)</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <style>
+    :root{
+      --bg:#F6F7F4;
+      --panel:#fff;
+      --muted:#8a8f86;
+      --primary:#2F7A5E;
+      --accent:#F5E9DA;
+      --soft:#f3efe9;
+      --card-radius:12px;
+      --shadow:0 8px 22px rgba(18,20,24,0.06);
+      --maxw:1400px;
+      --font: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family:var(--font);
+      background:linear-gradient(180deg,var(--bg),#fff);
+      color:#222;
+    }
+
+    /* overall layout: sidebar + main */
+    .layout{
+      max-width:var(--maxw);
+      margin:18px auto;
+      display:grid;
+      grid-template-columns:260px 1fr;
+      gap:20px;
+      padding:12px;
+      align-items:start;
+    }
+
+    /* SIDEBAR */
+    .sidebar{
+      background:var(--panel);
+      border-radius:14px;
+      padding:20px;
+      height:calc(100vh - 36px);
+      position:sticky;
+      top:18px;
+      box-shadow:var(--shadow);
+      display:flex;
+      flex-direction:column;
+      gap:18px;
+    }
+    .brand{display:flex;align-items:center;gap:10px}
+    .logo{
+      width:48px;height:48px;border-radius:10px;
+      background:linear-gradient(135deg,var(--primary),#4aa77a);
+      display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;
+    }
+    .brand h2{margin:0;font-size:18px;color:var(--primary)}
+
+    nav a{
+      display:block;
+      padding:12px;
+      border-radius:10px;
+      color:#2f3a34;
+      text-decoration:none;
+      font-weight:700;
+      margin-bottom:6px;
+    }
+    nav a.active{ background:var(--accent) }
+
+    .profile{ margin-top:auto; display:flex; gap:10px; align-items:center; color:var(--muted); font-size:13px }
+    .mini{ width:40px;height:40px;border-radius:8px;background:var(--accent);display:flex;align-items:center;justify-content:center;color:var(--primary);font-weight:800 }
+
+    /* MAIN */
+    main{ padding:6px 0 }
+    header{ display:flex; justify-content:space-between; align-items:flex-start; gap:12px; margin-bottom:8px }
+    header h1{ margin:0; font-size:22px; font-weight:800 }
+    header p{ margin:4px 0 0 0; color:var(--muted) }
+
+    .cards{ display:grid; grid-template-columns:repeat(4,1fr); gap:16px; margin-top:16px }
+    .card{
+      background:var(--panel);
+      padding:18px;
+      border-radius:12px;
+      box-shadow:var(--shadow);
+      border:1px solid rgba(0,0,0,0.03);
+    }
+
+    /* manage grid */
+    .manage-grid{ display:grid; grid-template-columns:1fr 380px; gap:18px; margin-top:18px; }
+
+    .panel{
+      background:var(--panel);
+      border-radius:12px;
+      padding:16px;
+      box-shadow:var(--shadow);
+      border:1px solid rgba(0,0,0,0.03);
+    }
+
+    .controls{ display:flex; gap:8px; align-items:center }
+    .controls input{
+      padding:8px 10px;
+      border-radius:8px;
+      border:1px solid #eee;
+      min-width:220px;
+    }
+
+    .btn{
+      background:var(--primary);
+      color:#fff;
+      border:none;
+      border-radius:8px;
+      padding:8px 12px;
+      font-weight:700;
+      cursor:default;
+    }
+    .btn.ghost{
+      background:#fff;
+      color:var(--primary);
+      border:1px solid #eee;
+      font-weight:700;
+    }
+
+    /* table */
+    .table{ width:100%; border-collapse:collapse; margin-top:12px; }
+    .table th, .table td{ padding:10px 8px; border-bottom:1px solid #f4f4f2; text-align:left; font-size:14px; color:#2b3a32 }
+    .table thead th{ color:var(--muted); font-weight:700; font-size:13px }
+
+    .badge{
+      display:inline-block;
+      padding:6px 10px;
+      border-radius:999px;
+      background:#eef8f3;
+      color:var(--primary);
+      font-weight:700;
+    }
+    .badge.pending{ background:#fff3e6; color:#a76d00 }
+
+    .small-muted{ color:var(--muted); font-size:13px }
+
+    /* side panel */
+    .side-panel .card{ margin-bottom:12px; }
+
+    /* progress bars */
+    .progress-wrap{ margin-top:12px }
+    .progress-row{ display:flex; align-items:center; gap:12px; margin-bottom:8px }
+    .progress-bar{ flex:1; background:#f0f0f0; height:12px; border-radius:999px; overflow:hidden }
+    .progress-inner{ height:100%; background:linear-gradient(90deg,var(--primary),#4aa77a) }
+
+    /* footer spacing */
+    .spacer{ height:18px }
+
+    /* responsive */
+    @media (max-width:1100px){
+      .layout{ grid-template-columns: 1fr; padding:12px }
+      .sidebar{ display:none }
+      .cards{ grid-template-columns:repeat(2,1fr) }
+      .manage-grid{ grid-template-columns:1fr }
+    }
+
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <!-- Sidebar -->
+    <aside class="sidebar" aria-label="Main">
+      <div class="brand">
+        <div class="logo">AS</div>
+        <div><h2>AyurSutra</h2></div>
+      </div>
+
+      <nav>
+        <a href="#" class="active">Overview</a>
+        <a href="#">Practitioners</a>
+        <a href="#">Patients</a>
+        <a href="#">Protocols</a>
+        <a href="#">Notifications</a>
+        <a href="#">Logout</a>
+      </nav>
+
+      <div class="profile">
+        <div class="mini">DA</div>
+        <div>
+          <div style="font-weight:800">Dr. Sharma</div>
+          <div class="small-muted">Admin</div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main -->
+    <main>
+      <header>
+        <div>
+          <h1>Admin Console</h1>
+          <p class="small-muted">Manage clinics, users, protocols and view clinic-wide KPIs</p>
+        </div>
+
+        <div style="display:flex;gap:8px;align-items:center">
+          <button class="btn.ghost btn" style="background:#fff;color:#333;border:1px solid #eee;cursor:default">Back to Staff Login</button>
+          <button class="btn" style="cursor:default">Create Clinic</button>
+        </div>
+      </header>
+
+      <!-- KPI cards -->
+      <div class="cards">
+        <div class="card">
+          <h4 style="margin:0 0 6px 0">Active Patients</h4>
+          <div style="font-weight:800;font-size:20px">124</div>
+          <div class="small-muted">+5 this week</div>
+        </div>
+
+        <div class="card">
+          <h4 style="margin:0 0 6px 0">Practitioners</h4>
+          <div style="font-weight:800;font-size:20px">12</div>
+          <div class="small-muted">2 new</div>
+        </div>
+
+        <div class="card">
+          <h4 style="margin:0 0 6px 0">Programs</h4>
+          <div style="font-weight:800;font-size:20px">7</div>
+          <div class="small-muted">Active protocols</div>
+        </div>
+
+        <div class="card">
+          <h4 style="margin:0 0 6px 0">Adherence</h4>
+          <div style="font-weight:800;font-size:20px">89%</div>
+          <div class="small-muted">Avg. last 30 days</div>
+        </div>
+      </div>
+
+      <div class="manage-grid">
+        <!-- left content -->
+        <section>
+          <div class="panel">
+            <div style="display:flex;justify-content:space-between;align-items:center">
+              <div>
+                <h3 style="margin:0">Users</h3>
+                <div class="small-muted">Manage practitioners, therapists & patients</div>
+              </div>
+              <div class="controls">
+                <input type="text" placeholder="Search users, email or ID" aria-label="search" />
+                <button class="btn" style="cursor:default">Add User</button>
+              </div>
+            </div>
+
+            <div style="margin-top:14px; overflow:auto;">
+              <table class="table" role="table">
+                <thead>
+                  <tr>
+                    <th>Name</th>
+                    <th>Role</th>
+                    <th>Contact</th>
+                    <th>Status</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Dr. Aarav Sharma</td>
+                    <td>Practitioner</td>
+                    <td>dr.aarav@clinic.test</td>
+                    <td><span class="badge">Active</span></td>
+                    <td><button class="btn ghost" style="background:#fff;color:#333;border:1px solid #eee;cursor:default">Edit</button></td>
+                  </tr>
+
+                  <tr>
+                    <td>Priya Singh</td>
+                    <td>Therapist</td>
+                    <td>priya@clinic.test</td>
+                    <td><span class="badge">Active</span></td>
+                    <td><button class="btn ghost" style="background:#fff;color:#333;border:1px solid #eee;cursor:default">Edit</button></td>
+                  </tr>
+
+                  <tr>
+                    <td>Meera Rao</td>
+                    <td>Patient</td>
+                    <td>meera@patient.test</td>
+                    <td><span class="badge pending">Pending</span></td>
+                    <td><button class="btn ghost" style="background:#fff;color:#333;border:1px solid #eee;cursor:default">Edit</button></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="panel" style="margin-top:16px">
+            <div style="display:flex;justify-content:space-between;align-items:center">
+              <div>
+                <h3 style="margin:0">Recent Activity</h3>
+                <div class="small-muted">Latest signups, bookings and feedback</div>
+              </div>
+              <div class="small-muted">Today</div>
+            </div>
+
+            <div style="margin-top:12px" class="small-muted">
+              <div style="margin-bottom:8px">Meera booked Abhyanga • Sep 10</div>
+              <div style="margin-bottom:8px">Karan submitted feedback • Sep 8</div>
+              <div style="margin-bottom:8px">New clinic added: Triveni Ayurveda</div>
+            </div>
+          </div>
+        </section>
+
+        <!-- right side panel -->
+        <aside class="side-panel">
+          <div class="card panel">
+            <h4 style="margin:0 0 8px 0">Quick Actions</h4>
+            <div style="display:flex;flex-direction:column;gap:8px">
+              <button class="btn ghost" style="background:#fff;color:#333;border:1px solid #eee;cursor:default">Invite Practitioner</button>
+              <button class="btn ghost" style="background:#fff;color:#333;border:1px solid #eee;cursor:default">Create Protocol</button>
+              <button class="btn ghost" style="background:#fff;color:#333;border:1px solid #eee;cursor:default">Export Reports</button>
+            </div>
+          </div>
+
+          <div class="card panel">
+            <h4 style="margin:0 0 8px 0">Clinic Info</h4>
+            <div class="small-muted">AyurSutra Wellness Center</div>
+            <div class="small-muted" style="margin-top:8px">Location: Pune, India</div>
+            <div style="margin-top:8px"><button class="btn ghost" style="background:#fff;color:#333;border:1px solid #eee;cursor:default">Edit</button></div>
+          </div>
+
+          <div class="card panel">
+            <h4 style="margin:0 0 8px 0">Notifications</h4>
+            <div class="small-muted">You have 3 pending notification templates to review</div>
+          </div>
+        </aside>
+      </div>
+
+      <div class="spacer"></div>
+
+      <div class="panel">
+        <h3 style="margin:0 0 6px 0">Patient Progress Overview</h3>
+        <div class="small-muted">Overall therapy progress for active patients</div>
+
+        <div class="progress-wrap">
+          <div class="progress-row">
+            <div style="flex:1;color:var(--muted)">Panchakarma Programs</div>
+            <div style="width:80px;text-align:right;font-weight:700">75%</div>
+          </div>
+          <div class="progress-bar"><div class="progress-inner" style="width:75%"></div></div>
+
+          <div style="height:12px"></div>
+
+          <div class="progress-row">
+            <div style="flex:1;color:var(--muted)">Abhyanga Therapy</div>
+            <div style="width:80px;text-align:right;font-weight:700">90%</div>
+          </div>
+          <div class="progress-bar"><div class="progress-inner" style="width:90%"></div></div>
+        </div>
+      </div>
+    </main>
+  </div>
+</body>
+</html>

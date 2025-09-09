@@ -1,0 +1,318 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Therapy Scheduling — AyurSutra (Prototype)</title>
+
+  <style>
+    :root{
+      --bg:#F6F7F4;
+      --panel:#fff;
+      --muted:#8a8f86;
+      --primary:#2F7A5E;
+      --accent:#F5E9DA;
+      --soft:#f3efe9;
+      --shadow: 0 8px 22px rgba(18,20,24,0.06);
+      --card-radius:12px;
+      --maxw:1400px;
+      --font: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family:var(--font);
+      background:linear-gradient(180deg,var(--bg),#fff);
+      color:#222;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+    }
+
+    /* page container (matches other pages) */
+    .container{
+      max-width:var(--maxw);
+      margin:18px auto;
+      display:grid;
+      grid-template-columns:260px 1fr 320px;
+      gap:18px;
+      padding:12px;
+      align-items:start;
+    }
+
+    /* SIDEBAR (static visual only) */
+    .sidebar{
+      background:var(--panel);
+      border-radius:var(--card-radius);
+      padding:20px;
+      height:calc(100vh - 36px);
+      position:sticky;
+      top:18px;
+      box-shadow:var(--shadow);
+      display:flex;
+      flex-direction:column;
+      gap:18px;
+    }
+    .brand{display:flex;align-items:center;gap:10px}
+    .logo{
+      width:46px;height:46px;border-radius:10px;
+      background:linear-gradient(135deg,var(--primary),#4aa77a);
+      display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;
+    }
+    .brand h3{margin:0;color:var(--primary);font-size:18px}
+    .side-nav{display:flex;flex-direction:column;gap:8px;margin-top:8px}
+    .side-nav a{display:block;padding:12px;border-radius:10px;color:#2f3a34;text-decoration:none;font-weight:700}
+    .side-nav a.active{ background:var(--accent) }
+    .mini{ width:40px;height:40px;border-radius:10px;background:var(--accent);display:flex;align-items:center;justify-content:center;color:var(--primary);font-weight:800 }
+
+    /* main content */
+    main{min-height:calc(100vh - 36px); padding:6px 0}
+    .topbar{ display:flex; justify-content:space-between; align-items:center; gap:12px; margin-bottom:6px }
+    .greeting h1{ margin:0; font-size:20px; font-weight:800 }
+    .greeting p{ margin:4px 0 0 0; color:var(--muted) }
+
+    .page-title { margin: 8px 0 6px 0; font-size:20px; font-weight:700 }
+    .muted { color:var(--muted) }
+
+    /* header controls */
+    .schedule-header { display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:18px; }
+    .range-controls { display:flex;align-items:center;gap:8px; }
+    .icon-btn { background:#fff;border:1px solid #eee;padding:8px 10px;border-radius:10px; cursor:default }
+    .view-toggle { display:flex;gap:8px;align-items:center }
+    .pill { padding:8px 14px;border-radius:999px;border:1px solid #eee;background:#fff; cursor:default; font-weight:700 }
+    .pill.active { background:var(--primary); color:#fff;border:none; }
+
+    .btn-outline{ padding:8px 12px;border-radius:10px;border:1px solid #eee;background:#fff; font-weight:700; cursor:default }
+    .btn-primary{ padding:10px 14px;border-radius:10px;border:0;background:var(--primary);color:#fff;font-weight:800; cursor:default }
+
+    /* days header */
+    .days-header {
+      display:grid;
+      grid-template-columns:120px repeat(7,1fr);
+      gap:12px;
+      align-items:center;
+      margin-bottom:12px;
+    }
+    .day-cell { background:#fff;border-radius:12px;padding:16px;text-align:center;border:1px solid rgba(0,0,0,0.03); box-shadow:var(--shadow) }
+    .day-label { font-size:13px;color:var(--muted) }
+    .day-date { margin-top:6px;font-weight:800;font-size:18px;color:#2b3a32 }
+
+    /* time grid */
+    .grid-wrap { display:grid; grid-template-columns:120px 1fr; gap:12px; }
+    .time-col { display:flex;flex-direction:column;gap:18px;padding-top:8px; }
+    .time-slot-label { height:56px; display:flex;align-items:center;color:var(--muted); padding-left:12px; font-weight:700; background:transparent }
+    .slots-area { padding-top:8px; }
+    .slots-grid { display:grid; grid-template-columns:repeat(7,1fr); gap:14px; }
+
+    .slot {
+      height:56px;
+      border-radius:12px;
+      border:2px dashed rgba(200,180,160,0.25);
+      display:flex;align-items:center;justify-content:center;
+      background: rgba(250,248,246,0.6);
+      color:var(--primary); font-weight:800; cursor:default;
+      transition:transform .12s ease, background .12s ease;
+    }
+    .slot:focus { outline:2px solid rgba(47,122,94,0.12) }
+    .slot:hover { background: rgba(247,247,246,0.9); transform: translateY(-1px); }
+
+    /* legend */
+    .legend { margin-top:28px; background:var(--panel); padding:18px; border-radius:12px; box-shadow:var(--shadow); display:flex; gap:16px; align-items:center; }
+    .legend-items { display:flex; gap:8px; flex-wrap:wrap; align-items:center; }
+    .legend-badge { padding:6px 10px; border-radius:999px; font-weight:700; font-size:13px; }
+    .badge-scheduled { background:#e9f0ff; color:#4169e1 }
+    .badge-upcoming { background:#fff2e6; color:#a76d00 }
+    .badge-inprogress { background:#e7f6ee; color:#1f8a4a }
+    .badge-completed { background:#eaf3ff; color:#2f7a5e }
+    .badge-cancelled { background:#fdecec; color:#c24a42 }
+
+    /* right column */
+    .right{ padding-top:14px; }
+
+    .quick-actions button{ width:100%; padding:10px;border-radius:10px;border:1px solid #eee;background:#fff; font-weight:700; cursor:default }
+    .notification-item{ background:#fff; padding:12px; border-radius:10px; border:1px solid #f1efe9; margin-bottom:10px; color:var(--muted) }
+
+    /* responsive */
+    @media (max-width:1100px){
+      .container { grid-template-columns:220px 1fr; }
+      .days-header { grid-template-columns:100px repeat(7,1fr); }
+      .grid-wrap { grid-template-columns:100px 1fr; }
+    }
+    @media (max-width:760px){
+      .container { grid-template-columns:1fr; padding:12px; }
+      .days-header { grid-template-columns: repeat(7, 1fr); overflow:auto; gap:8px; }
+      .grid-wrap { grid-template-columns: 1fr; }
+      .time-col { display:none; }
+    }
+
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Sidebar -->
+    <aside class="sidebar" aria-label="Main sidebar">
+      <div class="brand">
+        <div class="logo">AS</div>
+        <div><h3>AyurSutra</h3><div style="font-size:13px;color:var(--muted)">Panchakarma Clinic</div></div>
+      </div>
+
+      <nav class="side-nav">
+        <a href="doctor-dashboard.html">Dashboard</a>
+        <a href="patient-dashboard.html">Patients</a>
+        <a class="active" href="sessions.html">Sessions</a>
+        <a href="protocols.html">Therapy Protocols</a>
+        <a href="notifications.html">Notifications</a>
+        <a href="analytics.html">Analytics</a>
+        <a href="settings.html">Settings</a>
+      </nav>
+
+      <div style="margin-top:auto;font-size:13px;color:var(--muted)">
+        <div style="display:flex;gap:10px;align-items:center">
+          <div class="mini">DA</div>
+          <div>
+            <div style="font-weight:800">Dr. Sharma</div>
+            <div style="font-size:13px;color:var(--muted)">Vaidya</div>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main -->
+    <main class="main" role="main">
+      <div class="topbar">
+        <div class="greeting">
+          <h1>Good morning, Dr. Sharma</h1>
+          <p class="muted">Welcome to your Practitioner dashboard</p>
+        </div>
+        <div style="display:flex;gap:12px;align-items:center">
+          <div class="icon-btn" title="Notifications">🔔</div>
+          <div style="padding:6px 12px;border-radius:10px;background:var(--panel);box-shadow:var(--shadow);font-weight:700">Dr. Sharma ▾</div>
+        </div>
+      </div>
+
+      <h2 class="page-title">Therapy Scheduling</h2>
+      <p class="muted">Manage therapy sessions and appointments</p>
+
+      <div class="schedule-header" aria-hidden>
+        <div class="range-controls">
+          <button class="icon-btn">‹</button>
+          <div style="padding:10px 16px;border-radius:10px;background:#fff;border:1px solid #f0efe9">Week of 9/7/2025 - 9/13/2025</div>
+          <button class="icon-btn">›</button>
+        </div>
+
+        <div style="display:flex;gap:8px;align-items:center">
+          <div class="view-toggle" aria-hidden>
+            <div class="pill active">Week</div>
+            <div class="pill">Month</div>
+          </div>
+          <div class="btn-outline">Today</div>
+          <div class="btn-primary">+ Add Session</div>
+        </div>
+      </div>
+
+      <!-- Days header (static) -->
+      <div class="days-header" role="row">
+        <div></div>
+        <div class="day-cell"><div class="day-label">Sun</div><div class="day-date">7</div></div>
+        <div class="day-cell"><div class="day-label">Mon</div><div class="day-date">8</div></div>
+        <div class="day-cell"><div class="day-label">Tue</div><div class="day-date">9</div></div>
+        <div class="day-cell"><div class="day-label">Wed</div><div class="day-date">10</div></div>
+        <div class="day-cell"><div class="day-label">Thu</div><div class="day-date">11</div></div>
+        <div class="day-cell"><div class="day-label">Fri</div><div class="day-date">12</div></div>
+        <div class="day-cell"><div class="day-label">Sat</div><div class="day-date">13</div></div>
+      </div>
+
+      <!-- Time grid (static, 9:00 to 16:30 at 30-min intervals) -->
+      <div class="grid-wrap" aria-hidden>
+        <div class="time-col" aria-hidden>
+          <div class="time-slot-label">09:00</div>
+          <div class="time-slot-label">09:30</div>
+          <div class="time-slot-label">10:00</div>
+          <div class="time-slot-label">10:30</div>
+          <div class="time-slot-label">11:00</div>
+          <div class="time-slot-label">11:30</div>
+          <div class="time-slot-label">12:00</div>
+          <div class="time-slot-label">12:30</div>
+          <div class="time-slot-label">13:00</div>
+          <div class="time-slot-label">13:30</div>
+          <div class="time-slot-label">14:00</div>
+          <div class="time-slot-label">14:30</div>
+          
+        </div>
+
+        <div class="slots-area">
+          <div class="slots-grid" role="grid" aria-label="Weekly time slots">
+            <!-- 16 rows * 7 days = 112 slots. We output them as static elements. -->
+            <!-- Row 1 (09:00) -->
+            <div class="slot" role="button">+</div><div class="slot">+</div><div class="slot">+</div><div class="slot">+</div><div class="slot">+</div><div class="slot">+</div><div class="slot">+</div>
+
+            <!-- Row 2 (09:30) -->
+            <div class="slot">+</div><div class="slot">+</div><div class="slot">+</div><div class="slot">+</div><div class="slot">+</div><div class="slot">+</div><div class="slot">+</div>
+
+            <!-- Row 3 (10:00) -->
+            <div class="slot">+</div><div class="slot">+</div><div class="slot">+</div><div class="slot">+</div><div class="slot">+</div><div class="slot">+</div><div class="slot">+</div>
+
+            <!-- Row 4 (10:30) -->
+            <div class="slot">+</div><div class="slot">+</div><div class="slot">+</div><div class="slot">+</div><div class="slot">+</div><div class="slot">+</div><div class="slot">+</div>
+
+            <!-- Row 5 (11:00) -->
+            <div class="slot">+</div><div class="slot">+</div><div class="slot">+</div><div class="slot">+</div><div class="slot">+</div><div class="slot">+</div><div class="slot">+</div>
+
+            <!-- Row 6 (11:30) -->
+            <div class="slot">+</div><div class="slot">+</div><div class="slot">+</div><div class="slot">+</div><div class="slot">+</div><div class="slot">+</div><div class="slot">+</div>
+
+            <!-- Row 7 (12:00) -->
+            <div class="slot">+</div><div class="slot">+</div><div class="slot">+</div><div class="slot">+</div><div class="slot">+</div><div class="slot">+</div><div class="slot">+</div>
+
+            <!-- Row 8 (12:30) -->
+            <div class="slot">+</div><div class="slot">+</div><div class="slot">+</div><div class="slot">+</div><div class="slot">+</div><div class="slot">+</div><div class="slot">+</div>
+
+            <!-- Row 9 (13:00) -->
+            <div class="slot">+</div><div class="slot">+</div><div class="slot">+</div><div class="slot">+</div><div class="slot">+</div><div class="slot">+</div><div class="slot">+</div>
+
+            <!-- Row 10 (13:30) -->
+            <div class="slot">+</div><div class="slot">+</div><div class="slot">+</div><div class="slot">+</div><div class="slot">+</div><div class="slot">+</div><div class="slot">+</div>
+
+            <!-- Row 11 (14:00) -->
+            <div class="slot">+</div><div class="slot">+</div><div class="slot">+</div><div class="slot">+</div><div class="slot">+</div><div class="slot">+</div><div class="slot">+</div>
+
+            <!-- Row 12 (14:30) -->
+            <div class="slot">+</div><div class="slot">+</div><div class="slot">+</div><div class="slot">+</div><div class="slot">+</div><div class="slot">+</div><div class="slot">+</div>
+
+            <!-- Row 13 (15:00) -->
+            <div class="slot">+</div><div class="slot">+</div><div class="slot">+</div><div class="slot">+</div><div class="slot">+</div><div class="slot">+</div><div class="slot">+</div>
+
+           
+          </div>
+        </div>
+      </div>
+
+      <!-- legend -->
+      <div class="legend" aria-hidden>
+        <div style="display:flex;align-items:center;gap:12px">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="18" height="18" rx="4" stroke="#2f7a5e" stroke-width="1.2"/></svg>
+          <div style="font-weight:700">Session Status Legend</div>
+        </div>
+
+        <div class="legend-items" style="margin-left:10px">
+          <div class="legend-badge badge-scheduled">Scheduled</div>
+          <div class="legend-badge badge-upcoming">Upcoming</div>
+          <div class="legend-badge badge-inprogress">In Progress</div>
+          <div class="legend-badge badge-completed">Completed</div>
+          <div class="legend-badge badge-cancelled">Cancelled</div>
+        </div>
+      </div>
+    </main>
+
+    <!-- RIGHT column -->
+    <aside class="right" aria-label="Right column">
+      <div class="quick-actions" style="margin-bottom:12px">
+        <button style="padding:10px 12px;border-radius:10px;border:1px solid #eee;background:#fff;font-weight:700;cursor:default">Quick Actions</button>
+      </div>
+      <div class="notifications">
+        <h4 style="margin:0 0 8px 0">Notifications</h4>
+        <div class="notification-item">You have 3 upcoming sessions today.</div>
+      </div>
+    </aside>
+  </div>
+</body>
+</html>

@@ -1,0 +1,82 @@
+:root{
+  --bg:#F6F7F4; --panel:#fff; --muted:#8a8f86; --primary:#2F7A5E; --accent:#F5E9DA;
+  --soft:#f3efe9; --radius:14px; --card-radius:12px; --shadow:0 8px 22px rgba(18,20,24,0.06);
+  --maxw:1400px; --font-sans:system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0;font-family:var(--font-sans);background:linear-gradient(180deg,var(--bg),#fff);color:#222}
+a{color:inherit;text-decoration:none}
+.container{max-width:var(--maxw);margin:18px auto;padding:18px;display:grid;grid-template-columns:260px 1fr 340px;gap:22px;align-items:start}
+
+/* Sidebar */
+.sidebar{background:var(--panel);border-radius:14px;padding:22px;box-shadow:var(--shadow);height:calc(100vh - 36px);position:sticky;top:18px;display:flex;flex-direction:column;gap:18px;}
+.brand{display:flex;align-items:center;gap:12px}
+.brand .logo{width:46px;height:46px;border-radius:10px;background:linear-gradient(135deg,var(--primary),#4aa77a);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:20px}
+.brand h3{margin:0;font-size:18px;color:var(--primary)}
+.side-nav{display:flex;flex-direction:column;gap:8px;margin-top:6px}
+.side-nav a{display:flex;align-items:center;gap:12px;padding:12px;border-radius:10px;color:#2f3a34;font-weight:700}
+.side-nav a.active{background:var(--accent)}
+.sidebar .profile{margin-top:auto;font-size:13px;color:var(--muted);display:flex;gap:10px;align-items:center}
+.sidebar .profile .mini{width:40px;height:40px;border-radius:10px;background:var(--accent);display:flex;align-items:center;justify-content:center;font-weight:800;color:var(--primary)}
+
+.main{min-height:calc(100vh - 36px);padding:6px 0}
+.topbar{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:6px}
+.greeting h1{margin:0;font-size:20px;font-weight:800}
+.greeting p{margin:4px 0 0;color:var(--muted);font-size:14px}
+
+/* Buttons */
+.btn-primary{background:var(--primary);color:#fff;padding:10px 14px;border-radius:10px;border:0;font-weight:700;cursor:pointer}
+.btn-outline{background:#fff;border:1px solid #eee;padding:10px 14px;border-radius:10px;font-weight:700;cursor:pointer}
+.filters-btn{background:#fff;border:1px solid #eee;padding:10px 12px;border-radius:10px;font-weight:700}
+
+/* KPI grid */
+.kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:18px}
+.kpi{background:var(--panel);padding:18px;border-radius:var(--card-radius);box-shadow:var(--shadow)}
+.kpi h4{margin:0;font-size:13px;color:var(--muted)}
+.kpi .num{font-weight:800;font-size:20px;margin-top:10px}
+
+/* Sessions list */
+.section{background:var(--panel);border-radius:var(--card-radius);padding:18px;box-shadow:var(--shadow);margin-bottom:18px}
+.session-list{display:flex;flex-direction:column;gap:12px}
+.session-row{display:flex;justify-content:space-between;align-items:center;background:var(--soft);padding:16px;border-radius:14px;border:1px solid rgba(0,0,0,0.03)}
+.session-left{display:flex;gap:12px;align-items:center}
+.status-dot{width:10px;height:10px;border-radius:999px;background:var(--primary);opacity:0.9}
+.session-details strong{font-size:15px}
+.session-details span{font-size:13px;color:var(--muted);margin-top:4px}
+.session-right{display:flex;align-items:center;gap:12px}
+.time{color:var(--muted);font-weight:700}
+.pill{padding:6px 10px;border-radius:999px;font-size:12px;font-weight:700}
+.pill.scheduled{background:#e9f0ff;color:#4169e1}
+.pill.inprogress{background:#e7f6ee;color:#1f8a4a}
+.pill.completed{background:#eaf3ff;color:#2f7a5e}
+
+/* Cards grid for patients */
+.cards-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;align-items:start}
+.patient-card{background:var(--panel);border-radius:14px;padding:20px;box-shadow:var(--shadow);border:1px solid rgba(0,0,0,0.03);display:flex;flex-direction:column;gap:14px;min-height:320px}
+.avatar-circle{width:48px;height:48px;border-radius:999px;background:var(--primary);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:16px}
+.tag{padding:6px 10px;border-radius:999px;background:#eaf9f0;color:var(--primary);font-weight:700;font-size:12px}
+.patient-body{display:grid;grid-template-columns:1fr 1fr;gap:12px;color:var(--muted);font-size:14px}
+.label{color:var(--muted);font-weight:700;margin-bottom:6px}
+.value{color:#222;font-weight:600}
+.progress-bar-wrap{background:#f0f0f0;border-radius:999px;height:10px;overflow:hidden;margin-top:8px}
+.progress-inner{height:10px;background:linear-gradient(90deg,var(--primary),#4aa77a)}
+
+/* Right column */
+.right{position:sticky;top:18px;height:calc(100vh - 36px);display:flex;flex-direction:column;gap:14px}
+.quick-actions{background:var(--panel);padding:16px;border-radius:12px;box-shadow:var(--shadow)}
+.quick-actions button{width:100%;padding:12px;border-radius:10px;border:0;background:var(--primary);color:#fff;font-weight:800;cursor:pointer}
+.quick-actions .secondary{background:#fff;border:1px solid #eee;color:var(--primary);font-weight:800}
+.notifications{background:var(--panel);padding:14px;border-radius:12px;box-shadow:var(--shadow)}
+.notification-item{background:var(--soft);padding:12px;border-radius:12px;margin-bottom:10px;color:#2f3a34}
+
+/* Progress overview */
+.progress-overview{grid-column:2 / 3;margin-top:18px;background:var(--panel);padding:18px;border-radius:12px;box-shadow:var(--shadow)}
+.progress-row{display:flex;align-items:center;gap:18px;padding:8px 0;border-top:1px solid #f2f2f1}
+.progress-row:first-of-type{border-top:0;padding-top:0}
+.progress-label{flex:1;color:var(--muted)}
+.progress-value{width:120px;text-align:right;font-weight:700}
+.progress-bar-wrap-wide{width:100%;background:#f0f0f0;border-radius:999px;height:12px;overflow:hidden;margin-top:8px}
+
+/* responsive tweaks */
+@media (max-width:1200px){ .container{grid-template-columns:220px 1fr} .right{display:none} .search-row input{width:320px} }
+@media (max-width:760px){ .container{grid-template-columns:1fr;padding:12px} .sidebar{display:none} .cards-grid{grid-template-columns:1fr} .progress-overview{grid-column:1} }
